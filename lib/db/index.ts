@@ -3,24 +3,80 @@ import path from 'path';
 import fs from 'fs';
 import { seedDatabase } from './seed';
 
-// Ensure data folder exists
-const DATA_DIR = path.join(process.cwd(), 'data');
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
+function getDatabasePath(): string {
+  // On Vercel / AWS Lambda, the root deployment directory is strictly read-only.
+  // The only writable directory on serverless runtimes is /tmp.
+  const isServerless = Boolean(
+    process.env.VERCEL ||
+    process.env.AWS_LAMBDA_FUNCTION_NAME ||
+    process.env.LAMBDA_TASK_ROOT ||
+    (process.env.NODE_ENV === 'production' && !process.env.FLY_APP_NAME && !process.env.RENDER)
+  );
 
-const DB_PATH = path.join(DATA_DIR, 'al_ameen.db');
+  if (isServerless) {
+    const tmpDbPath = path.join('/tmp', 'al_ameen.db');
+    if (!fs.existsSync(tmpDbPath)) {
+      const sourceDb = path.join(process.cwd(), 'data', 'al_ameen.db');
+      if (fs.existsSync(sourceDb)) {
+        try {
+          fs.copyFileSync(sourceDb, tmpDbPath);
+          const sourceWal = path.join(process.cwd(), 'data', 'al_ameen.db-wal');
+          const sourceShm = path.join(process.cwd(), 'data', 'al_ameen.db-shm');
+          if (fs.existsSync(sourceWal)) {
+            try { fs.copyFileSync(sourceWal, `${tmpDbPath}-wal`); } catch {}
+          }
+          if (fs.existsSync(sourceShm)) {
+            try { fs.copyFileSync(sourceShm, `${tmpDbPath}-shm`); } catch {}
+          }
+        } catch (e) {
+          console.error('Failed copying bundled database to /tmp:', e);
+        }
+      }
+    }
+    return tmpDbPath;
+  }
+
+  // Persistent development or VPS server
+  const DATA_DIR = path.join(process.cwd(), 'data');
+  if (!fs.existsSync(DATA_DIR)) {
+    try {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    } catch {}
+  }
+  return path.join(DATA_DIR, 'al_ameen.db');
+}
 
 // Singleton database instance
 let dbInstance: Database.Database | null = null;
 
 export function getDb(): Database.Database {
   if (!dbInstance) {
-    dbInstance = new Database(DB_PATH);
-    dbInstance.pragma('journal_mode = WAL');
-    dbInstance.pragma('foreign_keys = ON');
-    initSchema(dbInstance);
-    seedDatabase(dbInstance);
+    const dbPath = getDatabasePath();
+
+    try {
+      dbInstance = new Database(dbPath);
+      try {
+        dbInstance.pragma('journal_mode = WAL');
+      } catch {
+        dbInstance.pragma('journal_mode = DELETE');
+      }
+      dbInstance.pragma('foreign_keys = ON');
+    } catch (openErr: any) {
+      console.warn('Could not open database in read-write mode, falling back to readonly:', openErr.message);
+      dbInstance = new Database(dbPath, { readonly: true });
+    }
+
+    try {
+      initSchema(dbInstance);
+    } catch (schemaErr: any) {
+      console.warn('initSchema notice (database may be pre-initialized or read-only):', schemaErr.message);
+    }
+
+    try {
+      seedDatabase(dbInstance);
+    } catch (seedErr: any) {
+      console.warn('seedDatabase notice:', seedErr.message);
+    }
   }
   return dbInstance;
 }
@@ -2495,8 +2551,12 @@ export function getUserByIdentifier(identifier: string) {
 }
 
 export function updateLastLogin(id: string) {
-  const db = getDb();
-  db.prepare('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(id);
+  try {
+    const db = getDb();
+    db.prepare('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(id);
+  } catch (err: any) {
+    console.warn('updateLastLogin notice (read-only mode):', err?.message);
+  }
 }
 
 export function getCashiers() {

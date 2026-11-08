@@ -57,8 +57,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Update last login
-    updateLastLogin(user.id);
+    // Update last login (non-blocking)
+    try {
+      updateLastLogin(user.id);
+    } catch (e) {
+      // Non-blocking for login flow
+    }
 
     // Create session token
     const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
