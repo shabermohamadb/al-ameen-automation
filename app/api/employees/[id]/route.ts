@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getEmployeeById, updateEmployee, deleteEmployee } from '@/lib/db';
+import { getEmployeeById, updateEmployee, deleteEmployee } from '@/lib/supabase-db';
 import { getSession } from '@/lib/auth';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -10,7 +10,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 
     const { id } = await params;
-    const emp = getEmployeeById(id);
+    const emp = await getEmployeeById(id);
     if (!emp) {
       return NextResponse.json({ error: 'Employee not found' }, { status: 404 });
     }
@@ -32,7 +32,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const { id } = await params;
     const body = await req.json();
-    const updated = updateEmployee(id, body);
+    const updated = await updateEmployee(id, body);
     return NextResponse.json(updated);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -50,7 +50,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     }
 
     const { id } = await params;
-    const result = deleteEmployee(id);
+    const result = await deleteEmployee(id);
     return NextResponse.json(result);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

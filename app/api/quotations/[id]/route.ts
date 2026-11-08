@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getQuotationById, updateQuotationStatus, deleteQuotation } from '@/lib/db';
+import { getQuotationById, updateQuotationStatus, deleteQuotation } from '@/lib/supabase-db';
 
 export async function GET(
   request: Request,
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const quotation = getQuotationById(id);
+    const quotation = await getQuotationById(id);
     if (!quotation) {
       return NextResponse.json({ success: false, error: 'Quotation not found' }, { status: 404 });
     }
@@ -24,7 +24,7 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const updated = updateQuotationStatus(id, body.status);
+    const updated = await updateQuotationStatus(id, body.status);
     return NextResponse.json({ success: true, data: updated });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -37,7 +37,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const result = deleteQuotation(id);
+    const result = await deleteQuotation(id);
     return NextResponse.json(result);
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

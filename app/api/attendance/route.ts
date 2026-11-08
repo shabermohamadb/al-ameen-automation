@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDailyAttendance, markAttendanceBatch, updateAttendanceRecord } from '@/lib/db';
+import { getDailyAttendance, markAttendanceBatch } from '@/lib/supabase-db';
+import { updateAttendanceRecord } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
@@ -12,7 +13,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
 
-    const records = getDailyAttendance(date);
+    const records = await getDailyAttendance(date);
     return NextResponse.json(records);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -36,9 +37,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const updated = markAttendanceBatch(
-      date,
-      records,
+    const updated = await markAttendanceBatch(
+      records.map((r: any) => ({ ...r, attendance_date: date })),
       session.userId,
       session.fullName || session.username
     );

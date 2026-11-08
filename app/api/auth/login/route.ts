@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserByIdentifier, updateLastLogin } from '@/lib/db';
+import { getUserByIdentifier, updateLastLogin } from '@/lib/supabase-db';
 import { verifyPassword, signSessionToken, SESSION_COOKIE_NAME, UserSession } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const user = getUserByIdentifier(identifier);
+    const user = await getUserByIdentifier(identifier);
     if (!user) {
       return NextResponse.json(
         { error: 'Invalid username/email or password.' },

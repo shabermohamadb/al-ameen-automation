@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCashiers, createCashier } from '@/lib/db';
+import { getCashiers } from '@/lib/supabase-db';
+import { createCashier } from '@/lib/db';
 import { getSession, hashPassword } from '@/lib/auth';
 
 export async function GET() {
@@ -12,7 +13,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Forbidden: Cashier management is restricted to Administrators.' }, { status: 403 });
     }
 
-    const cashiers = getCashiers();
+    const cashiers = await getCashiers();
     return NextResponse.json(cashiers);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

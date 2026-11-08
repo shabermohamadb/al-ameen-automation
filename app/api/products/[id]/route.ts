@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getProductById, updateProduct, deleteProduct, toggleProductActive } from '@/lib/db';
+import { getProductById, updateProduct, deleteProduct } from '@/lib/supabase-db';
 import { getSession } from '@/lib/auth';
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
-    const product = getProductById(id);
+    const product = await getProductById(id);
     if (!product) {
       return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 });
     }
@@ -19,7 +19,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
   try {
     const { id } = await context.params;
     const body = await request.json();
-    const updated = updateProduct(id, body);
+    const updated = await updateProduct(id, body);
     return NextResponse.json({ success: true, data: updated });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -30,7 +30,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   try {
     const { id } = await context.params;
     const body = await request.json().catch(() => ({}));
-    const updated = toggleProductActive(id, body.is_active);
+    const updated = await updateProduct(id, { is_active: body.is_active });
     return NextResponse.json({ success: true, data: updated });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -45,7 +45,7 @@ export async function DELETE(request: Request, context: { params: Promise<{ id: 
     }
 
     const { id } = await context.params;
-    const res = deleteProduct(id);
+    const res = await deleteProduct(id);
     return NextResponse.json(res);
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

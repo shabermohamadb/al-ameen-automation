@@ -1765,7 +1765,7 @@ export function convertQuotationToInvoice(quotationId: string) {
 export function deleteSalesInvoice(id: string) {
   const db = getDb();
   const invoice = getSalesInvoiceById(id);
-  if (!invoice) throw new Error('Invoice not found');
+  if (!invoice) return { success: true };
 
   const run = db.transaction(() => {
     // 1. Restore product stock if physical products were sold

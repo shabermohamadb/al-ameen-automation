@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSalesInvoiceById, deleteSalesInvoice } from '@/lib/db';
+import { getSalesInvoiceById, deleteSalesInvoice } from '@/lib/supabase-db';
 
 export async function GET(
   request: Request,
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const invoice = getSalesInvoiceById(id);
+    const invoice = await getSalesInvoiceById(id);
     if (!invoice) {
       return NextResponse.json({ success: false, error: 'Invoice not found' }, { status: 404 });
     }
@@ -23,7 +23,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const result = deleteSalesInvoice(id);
+    const result = await deleteSalesInvoice(id);
     return NextResponse.json(result);
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

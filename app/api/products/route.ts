@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getProducts, getCategories, createProduct } from '@/lib/db';
+import { getProducts, getCategories, createProduct } from '@/lib/supabase-db';
 
 export async function GET(request: Request) {
   try {
@@ -10,8 +10,8 @@ export async function GET(request: Request) {
     const activeOnly = activeParam === 'true';
     const search = searchParams.get('search') || undefined;
 
-    const products = getProducts({ categoryId, type, activeOnly, search });
-    const categories = getCategories();
+    const products = await getProducts({ categoryId, type, activeOnly, search });
+    const categories = await getCategories();
     return NextResponse.json({ success: true, data: products, categories });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     if (!body.name) {
       return NextResponse.json({ success: false, error: 'Product name is required' }, { status: 400 });
     }
-    const product = createProduct(body);
+    const product = await createProduct(body);
     return NextResponse.json({ success: true, data: product }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

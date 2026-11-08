@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getEmployees, createEmployee } from '@/lib/db';
+import { getEmployees, createEmployee } from '@/lib/supabase-db';
 import { getSession } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
@@ -14,7 +14,22 @@ export async function GET(req: NextRequest) {
     const department = searchParams.get('department') || undefined;
     const search = searchParams.get('search') || undefined;
 
-    const employees = getEmployees({ status, department, search });
+    let employees = await getEmployees();
+    if (status) {
+      employees = employees.filter((e: any) => e.employment_status === status);
+    }
+    if (department) {
+      employees = employees.filter((e: any) => e.department === department);
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      employees = employees.filter((e: any) =>
+        e.full_name?.toLowerCase().includes(q) ||
+        e.emp_code?.toLowerCase().includes(q) ||
+        e.phone?.includes(q)
+      );
+    }
+
     return NextResponse.json(employees);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -36,7 +51,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Full name and phone number are required.' }, { status: 400 });
     }
 
-    const employee = createEmployee(body);
+    const employee = await createEmployee(body);
     return NextResponse.json(employee, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

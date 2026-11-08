@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSalaryPayments, recordSalaryPayment } from '@/lib/db';
+import { getSalaryPayments, recordSalaryPayment } from '@/lib/supabase-db';
 import { getSession } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
@@ -17,7 +17,10 @@ export async function GET(req: NextRequest) {
     const month = searchParams.get('month') ? parseInt(searchParams.get('month')!, 10) : undefined;
     const year = searchParams.get('year') ? parseInt(searchParams.get('year')!, 10) : undefined;
 
-    const payments = getSalaryPayments({ employeeId, month, year });
+    let payments = await getSalaryPayments(month, year);
+    if (employeeId) {
+      payments = payments.filter((p: any) => p.employee_id === employeeId);
+    }
     return NextResponse.json(payments);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -42,7 +45,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const payment = recordSalaryPayment({
+    const payment = await recordSalaryPayment({
       ...body,
       recorded_by_user_id: session.userId,
     });

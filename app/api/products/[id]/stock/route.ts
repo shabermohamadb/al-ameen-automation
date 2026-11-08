@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { adjustStock } from '@/lib/db';
+import { adjustStock } from '@/lib/supabase-db';
 import { getSession } from '@/lib/auth';
 
 export async function POST(
@@ -18,12 +18,16 @@ export async function POST(
       return NextResponse.json({ success: false, error: 'Valid quantity is required' }, { status: 400 });
     }
 
-    adjustStock(id, quantity, type, notes, {
-      userId: session?.userId,
-      userName: session?.fullName || session?.username,
-      userRole: session?.role,
-      reason: notes || 'Stock adjustment',
-    });
+    await adjustStock(
+      id,
+      type,
+      quantity,
+      notes || 'Stock adjustment',
+      session?.userId,
+      session?.fullName || session?.username,
+      session?.role,
+      body.new_price ? Number(body.new_price) : undefined
+    );
 
     return NextResponse.json({ success: true, message: 'Stock updated successfully' });
   } catch (error: any) {

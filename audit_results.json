@@ -1,0 +1,355 @@
+{
+  "total": 58,
+  "pass": 58,
+  "fail": 0,
+  "results": [
+    {
+      "section": "Authentication",
+      "testName": "Admin Login",
+      "status": "PASS",
+      "details": "Redirect: /"
+    },
+    {
+      "section": "Authentication",
+      "testName": "Manager/Cashier Login",
+      "status": "PASS",
+      "details": "Redirect: /cashier"
+    },
+    {
+      "section": "Authentication",
+      "testName": "Manager Blocked from Admin Portal",
+      "status": "PASS",
+      "details": "403 Forbidden enforced"
+    },
+    {
+      "section": "Authentication",
+      "testName": "Admin Blocked from Cashier Portal",
+      "status": "PASS",
+      "details": "403 Forbidden enforced"
+    },
+    {
+      "section": "Authentication",
+      "testName": "Protected Routes Block Unauthenticated Access",
+      "status": "PASS",
+      "details": "401 Unauthorized"
+    },
+    {
+      "section": "Authentication",
+      "testName": "Session Validation & Persistence",
+      "status": "PASS",
+      "details": "User: admin"
+    },
+    {
+      "section": "Invoice Module",
+      "testName": "Create Test Invoice via API",
+      "status": "PASS",
+      "details": "ID: inv_1794151460211, Number: TEST-AUDIT-0193"
+    },
+    {
+      "section": "Invoice Module",
+      "testName": "Direct Supabase sales_invoices Persistence",
+      "status": "PASS",
+      "details": "Found in Supabase: inv_1794151460211"
+    },
+    {
+      "section": "Invoice Module",
+      "testName": "Direct Supabase sales_invoice_items Persistence",
+      "status": "PASS",
+      "details": "Items count: 1"
+    },
+    {
+      "section": "Invoice Module",
+      "testName": "Advance Payment Persistence in Supabase",
+      "status": "PASS",
+      "details": "Payment ID: pay_1794151461328, Amount: 180"
+    },
+    {
+      "section": "Invoice Module",
+      "testName": "Execute Invoice DELETE via API",
+      "status": "PASS",
+      "details": "API returned success"
+    },
+    {
+      "section": "Invoice Module",
+      "testName": "Permanent Supabase Deletion Verification",
+      "status": "PASS",
+      "details": "Confirmed 0 records in Supabase sales_invoices"
+    },
+    {
+      "section": "Invoice Module",
+      "testName": "Cascade Item Deletion in Supabase",
+      "status": "PASS",
+      "details": "Confirmed 0 items in Supabase sales_invoice_items"
+    },
+    {
+      "section": "Invoice Module",
+      "testName": "Linked Payment Cleanup in Supabase",
+      "status": "PASS",
+      "details": "Confirmed 0 payments linked to deleted invoice"
+    },
+    {
+      "section": "Invoice Module",
+      "testName": "Invoice Non-Reappearance After Logout/Re-login",
+      "status": "PASS",
+      "details": "Deleted invoice did NOT reappear"
+    },
+    {
+      "section": "Products & Inventory",
+      "testName": "Create Product via API",
+      "status": "PASS",
+      "details": "ID: prod_1794151464330"
+    },
+    {
+      "section": "Products & Inventory",
+      "testName": "Supabase Product Persistence",
+      "status": "PASS",
+      "details": "Stock: 10"
+    },
+    {
+      "section": "Products & Inventory",
+      "testName": "Restock Product (type: in)",
+      "status": "PASS",
+      "details": "Stock added +15"
+    },
+    {
+      "section": "Products & Inventory",
+      "testName": "Supabase Stock Value Correctness",
+      "status": "PASS",
+      "details": "Expected 25, got 25"
+    },
+    {
+      "section": "Products & Inventory",
+      "testName": "Stock Movement Audit Trail in Supabase",
+      "status": "PASS",
+      "details": "Logs count: 1"
+    },
+    {
+      "section": "Products & Inventory",
+      "testName": "Delete Product & Supabase Cleanup",
+      "status": "PASS",
+      "details": "Product removed"
+    },
+    {
+      "section": "Customers",
+      "testName": "Create Customer via API",
+      "status": "PASS",
+      "details": "ID: cust_1794151465999"
+    },
+    {
+      "section": "Customers",
+      "testName": "Supabase Customer Persistence & Balance",
+      "status": "PASS",
+      "details": "Balance: 500"
+    },
+    {
+      "section": "Customers",
+      "testName": "Update Customer Persistence",
+      "status": "PASS",
+      "details": "Phone updated in Supabase"
+    },
+    {
+      "section": "Quotations",
+      "testName": "Create Quotation via API",
+      "status": "PASS",
+      "details": "ID: qt_1794151467696"
+    },
+    {
+      "section": "Quotations",
+      "testName": "Supabase Quotation Persistence",
+      "status": "PASS",
+      "details": "Found: QT-AUDIT-7685"
+    },
+    {
+      "section": "Quotations",
+      "testName": "Convert Quotation to Invoice",
+      "status": "PASS",
+      "details": "Generated Invoice: SI-003"
+    },
+    {
+      "section": "Quotations",
+      "testName": "Quotation Status Update in Supabase",
+      "status": "PASS",
+      "details": "Status: converted"
+    },
+    {
+      "section": "Employees & HR",
+      "testName": "Create Employee via API",
+      "status": "PASS",
+      "details": "ID: emp_1794151472295"
+    },
+    {
+      "section": "Employees & HR",
+      "testName": "Supabase Employee Persistence",
+      "status": "PASS",
+      "details": "Salary: ₹18000"
+    },
+    {
+      "section": "Employees & HR",
+      "testName": "Mark Attendance Batch via API",
+      "status": "PASS",
+      "details": "Recorded attendance"
+    },
+    {
+      "section": "Employees & HR",
+      "testName": "Supabase Attendance Persistence",
+      "status": "PASS",
+      "details": "Status: present"
+    },
+    {
+      "section": "Employees & HR",
+      "testName": "Disburse/Record Salary via API",
+      "status": "PASS",
+      "details": "Payment: ₹18000"
+    },
+    {
+      "section": "Employees & HR",
+      "testName": "Supabase Salary Persistence",
+      "status": "PASS",
+      "details": "Paid: ₹18000"
+    },
+    {
+      "section": "Finance",
+      "testName": "Create Expense via API",
+      "status": "PASS",
+      "details": "ID: exp_1794151473254"
+    },
+    {
+      "section": "Finance",
+      "testName": "Supabase Expense Persistence",
+      "status": "PASS",
+      "details": "Amount: ₹2450"
+    },
+    {
+      "section": "Finance",
+      "testName": "Dashboard Financial Aggregation",
+      "status": "PASS",
+      "details": "Total Sales: ₹25024.16, Profit: ₹25024.16"
+    },
+    {
+      "section": "Company Settings",
+      "testName": "Fetch Business Profile & Settings",
+      "status": "PASS",
+      "details": "Name: AL AMEEN WELDING WORKS & ROLLING SHUTTER MANUFACTURING"
+    },
+    {
+      "section": "Company Settings",
+      "testName": "Update Business Configuration",
+      "status": "PASS",
+      "details": "Settings updated"
+    },
+    {
+      "section": "Security & RLS",
+      "testName": "Anonymous Key Write Blocked by RLS",
+      "status": "PASS",
+      "details": "Blocked: new row violates row-level security policy for table \"sales_invoices\""
+    },
+    {
+      "section": "Security & RLS",
+      "testName": "Zero Hardcoded Secrets in Source Code",
+      "status": "PASS",
+      "details": "All secrets read from process.env strictly"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.businesses",
+      "status": "PASS",
+      "details": "Count: 1"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.business_settings",
+      "status": "PASS",
+      "details": "Count: 1"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.users",
+      "status": "PASS",
+      "details": "Count: 9"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.customers",
+      "status": "PASS",
+      "details": "Count: 1"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.suppliers",
+      "status": "PASS",
+      "details": "Count: 1"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.product_categories",
+      "status": "PASS",
+      "details": "Count: 16"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.products",
+      "status": "PASS",
+      "details": "Count: 17"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.stock_movements",
+      "status": "PASS",
+      "details": "Count: 5"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.quotations",
+      "status": "PASS",
+      "details": "Count: 1"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.quotation_items",
+      "status": "PASS",
+      "details": "Count: 1"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.sales_invoices",
+      "status": "PASS",
+      "details": "Count: 3"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.sales_invoice_items",
+      "status": "PASS",
+      "details": "Count: 2"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.payments",
+      "status": "PASS",
+      "details": "Count: 3"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.expenses",
+      "status": "PASS",
+      "details": "Count: 0"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.employees",
+      "status": "PASS",
+      "details": "Count: 14"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.attendance_records",
+      "status": "PASS",
+      "details": "Count: 13"
+    },
+    {
+      "section": "Schema Integrity",
+      "testName": "Table public.salary_payments",
+      "status": "PASS",
+      "details": "Count: 5"
+    }
+  ]
+}
