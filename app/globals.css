@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-brand-navy: #172B4D;
+  --color-brand-navy-dark: #0A1C36;
+  --color-brand-navy-light: #203A65;
+  --color-brand-teal: #13A89E;
+  --color-brand-teal-hover: #0E8F87;
+  --color-brand-teal-light: #E6F7F6;
+  --color-brand-bg: #F5F7FA;
+  --color-brand-card: #FFFFFF;
+  --color-brand-border: #E2E8F0;
+  --color-brand-muted: #64748B;
+  --color-brand-success: #16A36A;
+  --color-brand-warning: #D99A26;
+  --color-brand-error: #DC4545;
+  --color-brand-disabled: #94A3B8;
+
+  --color-sidebar-bg: #172B4D;
+  --color-sidebar-hover: #203A65;
+  --color-sidebar-border: #203A65;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #F5F7FA;
+    --foreground: #172B4D;
+    --sidebar-bg: #172B4D;
+    --sidebar-hover: #203A65;
+    --primary: #13A89E;
+    --primary-hover: #0E8F87;
+    --card: #FFFFFF;
+    --card-foreground: #172B4D;
+    --border: #E2E8F0;
+    --muted: #64748B;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F5F7FA;
+  color: #172B4D;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
